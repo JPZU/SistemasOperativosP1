@@ -1,0 +1,4 @@
+Correr el Makefile:
+make (Compila)
+make clean (Elimina los compilados)
+./UsoBits (correr el código)
