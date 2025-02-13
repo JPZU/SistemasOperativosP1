@@ -35,13 +35,18 @@ bool ManejadorArchivo::leerArchivo(const std::string& nombreArchivo) {
 // FUNCIÓN: convertirABits()
 // =====================================
 // Propósito: Convierte cada byte leído en su representación de 8 bits.
-void ManejadorArchivo::convertirABits() {
+void ManejadorArchivo::convertirABits(int shift) {
     bits.clear();  // Limpiar el vector antes de convertir nuevos datos
-    
+
     for (uint8_t byte : datos) {
-        bits.push_back(std::bitset<8>(byte).to_string());  // Convierte cada byte a 8 bits
+        // Aplicar Cifrado César en ASCII (sumando el shift)
+        uint8_t byteEncriptado = byte + shift;
+
+        // Convertir el byte encriptado a binario y almacenar
+        bits.push_back(std::bitset<8>(byteEncriptado).to_string());
     }
 }
+
 
 // =====================================
 // FUNCIÓN: mostrarBits()
@@ -64,11 +69,6 @@ void ManejadorArchivo::mostrarBits() const {
 //  Parámetro: `nombreSalida` → Nombre del archivo de salida.
 
 void ManejadorArchivo::escribirArchivo(const std::string& nombreSalida) {
-    // `open()` abre el archivo para escritura (creándolo si no existe)
-    // `O_WRONLY` → Solo escritura
-    // `O_CREAT` → Crea el archivo si no existe
-    // `O_TRUNC` → Si el archivo existe, lo sobreescribe
-    // `0644` → Permisos de lectura/escritura para el dueño, lectura para otros
     int fd = open(nombreSalida.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
     
     if (fd == -1) {
@@ -76,17 +76,24 @@ void ManejadorArchivo::escribirArchivo(const std::string& nombreSalida) {
         return;
     }
 
-    // `write(fd, datos.data(), datos.size())` escribe el contenido en el archivo
-    ssize_t bytesEscritos = write(fd, datos.data(), datos.size());
+    // Convertir la lista de bits en caracteres ASCII encriptados
+    std::vector<uint8_t> datosEncriptados;
+    for (const auto& bitString : bits) {
+        datosEncriptados.push_back(static_cast<uint8_t>(std::bitset<8>(bitString).to_ulong()));
+    }
+
+    // Escribir el texto encriptado en el archivo
+    ssize_t bytesEscritos = write(fd, datosEncriptados.data(), datosEncriptados.size());
     
     if (bytesEscritos == -1) {
         std::cerr << "Error: No se pudo escribir en el archivo " << nombreSalida << std::endl;
     } else {
-        std::cout << "Archivo guardado exitosamente: " << nombreSalida << std::endl;
+        std::cout << "Archivo encriptado guardado exitosamente: " << nombreSalida << std::endl;
     }
 
-    close(fd);  // Se cierra el archivo para liberar recursos
+    close(fd);
 }
+
 
 // =====================================
 //  FUNCIÓN: matrizBits()

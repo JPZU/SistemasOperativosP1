@@ -12,23 +12,9 @@ int main(int argc, char* argv[]) {
     ManejadorArchivo manejador;
 
     if (manejador.leerArchivo(archivoEntrada)) {
-        manejador.convertirABits();
+        manejador.convertirABits(3);  // Cifrado César con desplazamiento +3 en ASCII
         manejador.mostrarBits();
         manejador.escribirArchivo(archivoSalida);
-
-        std::vector<std::vector<int>> matriz = manejador.matrizBits();
-        std::cout << "\nMatriz de bits del archivo:\n";
-        int tamano = matriz.size();
-        int indice = 0;
-        std::cout << "  Tamaño lista:" << tamano << std::endl;
-        for (const auto& letra : matriz) {
-            std::cout << "[" << indice << "/" << tamano-1 << "] ";
-            for (int bit : letra)
-                std::cout<< bit;
-            indice++;
-            
-            std::cout << std::endl;
-        }
     }
 
     return 0;

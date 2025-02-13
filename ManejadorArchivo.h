@@ -26,7 +26,7 @@ private:
 
 public:
     bool leerArchivo(const std::string& nombreArchivo);  // Lee el archivo y almacena los bytes
-    void convertirABits();   // Convierte los bytes almacenados en bits
+    void convertirABits(int shift);   // Convierte los bytes almacenados en bits
     void escribirArchivo(const std::string& nombreSalida);  // Escribe los datos en otro archivo
     void mostrarBits() const;  // Muestra en pantalla los bits de cada byte
     std::vector<std::vector<int>> matrizBits();  // Devuelve la matriz de bits (8 bits por fila)
