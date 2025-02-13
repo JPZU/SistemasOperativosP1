@@ -38,9 +38,32 @@ bool ManejadorArchivo::leerArchivo(const std::string& nombreArchivo) {
 void ManejadorArchivo::convertirABits() {
     bits.clear();  // Limpiar el vector antes de convertir nuevos datos
     
+    // Crear un nuevo vector para almacenar los datos encriptados
+    std::vector<uint8_t> datosEncriptados;
+
     for (uint8_t byte : datos) {
-        bits.push_back(std::bitset<8>(byte).to_string());  // Convierte cada byte a 8 bits
+        // 1. Sumarle 3 al valor del byte
+        int valorEncriptado = byte + 3;
+        
+        // 2. Convertir manualmente a binario (8 bits) para mostrarlo
+        char binario[9]; // 8 bits + 1 para el '\0'
+        binario[8] = '\0'; // Fin de cadena
+
+        int temp = valorEncriptado;
+        for (int i = 7; i >= 0; --i) {
+            binario[i] = (temp % 2) + '0';  // 0 o 1 convertido a carácter
+            temp /= 2;
+        }
+        
+        // 3. Almacenar el binario como string en el vector `bits` (para mostrarlo)
+        bits.push_back(std::string(binario));
+
+        // 4. Almacenar el valor encriptado en el nuevo vector `datosEncriptados`
+        datosEncriptados.push_back(static_cast<uint8_t>(valorEncriptado));
     }
+    
+    // 5. Actualizar `datos` con los nuevos valores encriptados
+    datos = datosEncriptados;
 }
 
 // =====================================
