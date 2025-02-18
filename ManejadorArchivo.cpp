@@ -69,6 +69,11 @@ void ManejadorArchivo::mostrarBits() const {
 //  Parámetro: `nombreSalida` → Nombre del archivo de salida.
 
 void ManejadorArchivo::escribirArchivo(const std::string& nombreSalida) {
+    // `open()` abre el archivo para escritura (creándolo si no existe)
+    // `O_WRONLY` → Solo escritura
+    // `O_CREAT` → Crea el archivo si no existe
+    // `O_TRUNC` → Si el archivo existe, lo sobreescribe
+    // `0644` → Permisos de lectura/escritura para el dueño, lectura para otros
     int fd = open(nombreSalida.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
     
     if (fd == -1) {
